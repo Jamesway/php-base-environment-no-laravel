@@ -6,6 +6,7 @@ Installs router, dependency injection container (DIC), data mapper ORM, logger, 
 
 docker run --rm -itv $(pwd):/app jamesway/php71-cli-dev composer nikic/fast-route \
                                                               && php-di/php-di \
+                                                              && psr/container \
                                                               && ramsey/uuid \
                                                               && doctrine/orm \
                                                               monolog/monolog

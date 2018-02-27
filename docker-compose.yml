@@ -1,0 +1,77 @@
+# NOTE - THIS IS A DEV COMPOSE FILE!!!!
+version: "2"
+services:
+  php-fpm:
+    image: jamesway/php71-fpm-xdebug
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www               # disable for docker-sync
+      #- app-sync:/var/www:nocopy # enable for docker-sync
+    env_file: .env
+    environment:
+      - DB_HOST=${DB_HOST}
+      - DB_DATABASE=${DB_DATABASE}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+  php-cli:
+    image: jamesway/php71-cli-dev
+    working_dir: /app
+    volumes:
+      - ./:/app               # disable for docker-sync
+      #- app-sync:/app:nocopy # enable for docker-sync
+
+  #when changing the service label for php-fpm, update the vhost-dev.conf or nginx fails
+  nginx:
+    image: nginx:1.12-alpine
+    working_dir: /var/www
+    volumes:
+      - ./nginx_conf:/etc/nginx/conf.d
+      - ./:/var/www               # disable for docker-sync
+      #- app-sync:/var/www:nocopy # enable for docker-sync
+    ports:
+      - 8080:80
+
+  mariadb:
+    image: mariadb:10.3
+    volumes:
+      - dbdata:/var/lib/mysql
+    env_file: .env
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - 3306:3306
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    volumes:
+      - /sessions
+    ports:
+      - 8180:80
+    environment:
+      - PMA_ARBITRARY=1
+    depends_on:
+      - mariadb
+
+  redis:
+    image: redis:3-alpine
+    env_file: .env
+    # https://github.com/docker-library/redis/issues/46#issuecomment-364735991
+    #command: redis-server --requirepass ${REDIS_PASSWORD} --appendonly yes #ENV and .env file vars don't work with "command"
+    command: ["/bin/sh", "-c", "docker-entrypoint.sh --requirepass $${REDIS_PASSWORD}"]
+    ports: ["6379"]
+    volumes:
+      - dbdata:/data
+
+# Named volumes persist after their container is removed which makes them ideal for data storage containers.
+# When making changes to a service config (eg. mariadb) that uses "dbdata",
+# or if mariadb becomes corrupted, remove the named volume and start fresh before bringing the stack up
+volumes:
+  # external since they're from docker-sync/unison containers
+  #app-sync:         # enable for docker-sync
+  #  external: true  # enable for docker-sync
+
+  # anonymous volume
+  dbdata:
