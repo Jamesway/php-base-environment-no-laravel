@@ -48,6 +48,7 @@ class ComposerStaticInitbd73af055a3f61a0ef745165993a4af0
         ),
         'M' => 
         array (
+            'MyProject\\' => 10,
             'Monolog\\' => 8,
         ),
         'I' => 
@@ -136,6 +137,10 @@ class ComposerStaticInitbd73af055a3f61a0ef745165993a4af0
         'PhpDocReader\\' => 
         array (
             0 => __DIR__ . '/..' . '/php-di/phpdoc-reader/src/PhpDocReader',
+        ),
+        'MyProject\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src',
         ),
         'Monolog\\' => 
         array (

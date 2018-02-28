@@ -9,5 +9,10 @@
     "require-dev": {
         "php-console/php-console": "^3.1",
         "phpspec/phpspec": "^4.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "MyProject\\": "src/"
+        }
     }
 }

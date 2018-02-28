@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/php-base-environment-no-laravel.iml" filepath="$PROJECT_DIR$/.idea/php-base-environment-no-laravel.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/php71-base-environment-no-framework.iml" filepath="$PROJECT_DIR$/.idea/php71-base-environment-no-framework.iml" />
     </modules>
   </component>
 </project>
